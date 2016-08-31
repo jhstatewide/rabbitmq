@@ -5,10 +5,12 @@
 #
 
 # Pull base image.
-FROM dockerfile/ubuntu
+FROM ubuntu:14.04
 
 # Add files.
 ADD bin/rabbitmq-start /usr/local/bin/
+
+RUN apt-get update && apt-get install -y wget 
 
 # Install RabbitMQ.
 RUN \
@@ -18,6 +20,7 @@ RUN \
   DEBIAN_FRONTEND=noninteractive apt-get install -y rabbitmq-server && \
   rm -rf /var/lib/apt/lists/* && \
   rabbitmq-plugins enable rabbitmq_management && \
+  rabbitmq-plugins enable rabbitmq_mqtt && \
   echo "[{rabbit, [{loopback_users, []}]}]." > /etc/rabbitmq/rabbitmq.config && \
   chmod +x /usr/local/bin/rabbitmq-start
 
